@@ -1,0 +1,169 @@
+CREATE TABLE Branch (
+  BranchName VARCHAR(255) NOT NULL,
+  BranchCity VARCHAR(255) NOT NULL,
+  Assets DECIMAL(10, 2) NOT NULL,
+  PRIMARY KEY (BranchName)
+);
+
+
+INSERT INTO Branch (BranchName, BranchCity, Assets) VALUES
+  ('Main Avenue', 'Chicago', 40000000),
+  ('Park Avenue', 'Miami', 35000000),
+  ('Circle Avenue', 'New York', 37000000),
+  ('Bridge Avenue', 'Austin', 45000000),
+  ('Rose', 'Los Angeles', 33000000),
+  ('Maywood', 'Miami', 49000000),
+  ('Brook', 'Chicago', 52000000),
+  ('Edge', 'New York', 34000000),
+  ('Creek', 'Austin', 38000000),
+  ('Hart', 'Los Angeles', 55000000);
+
+
+CREATE TABLE Account_Number (
+  AccountNumber INT NOT NULL,
+  BranchName VARCHAR(255) NOT NULL,
+  Balance DECIMAL(10, 2) NOT NULL,
+  LoanAccount DECIMAL(10, 2) NOT NULL,
+  SavingsAccount DECIMAL(10, 2) NOT NULL,
+  CheckingAccount DECIMAL(10, 2) NOT NULL,
+  MoneyMarketAccount DECIMAL(10, 2) NOT NULL,
+  SSN INT NOT NULL,
+  PRIMARY KEY (AccountNumber),
+  FOREIGN KEY (BranchName) REFERENCES Branch(BranchName)
+);
+
+
+INSERT INTO Account_Number (AccountNumber, BranchName, Balance, LoanAccount, SavingsAccount, CheckingAccount, MoneyMarketAccount, SSN) VALUES
+  (1, 'Main Avenue', 110000, 25000, 50000, 25000, 10000, 12345),
+  (2, 'Park Avenue', 180000, 50000, 50000, 75000, 5000, 23456),
+  (3, 'Circle Avenue', 100000, 0, 50000, 50000, 0, 34567),
+  (4, 'Bridge Avenue', 140000, 0, 75000, 65000, 0, 45678),
+  (5, 'Rose', 185000, 75000, 10000, 75000, 25000, 56789),
+  (6, 'Maywood', 190000, 25000, 65000, 85000, 15000, 67890),
+  (7, 'Brook', 82000, 0, 80000, 1000, 1000, 78901),
+  (8, 'Edge', 46000, 0, 0, 45000, 1000, 89012),
+  (9, 'Creek', 96000, 0, 10000, 85000, 1000, 90123),
+  (10, 'Hart', 123000, 1000, 55000, 65000, 2000, 1234);
+
+
+CREATE TABLE Depositor (
+  CustomerName VARCHAR(255) NOT NULL,
+  AccountNumber INT NOT NULL,
+  AccessDate DATE NOT NULL,
+  PRIMARY KEY (CustomerName, AccountNumber),
+  FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
+);
+
+
+INSERT INTO Depositor (CustomerName, AccountNumber, AccessDate) VALUES
+  ('Andrew Dziedzic', 1, '2023-01-05'),
+  ('Derek Leckner', 2, '2023-02-07'),
+  ('Sergio Jackson', 3, '2023-02-16'),
+  ('Adam Johnson', 4, '2023-02-14'),
+  ('Anna Pegan', 5, '2023-02-08'),
+  ('Robert Village', 6, '2023-01-11'),
+  ('Mary Perry', 7, '2023-02-22'),
+  ('Stephanie Veehoy', 8, '2023-01-17'),
+  ('Jane Phillips', 9, '2023-02-25'),
+  ('Marissa Sinsowky', 10, '2023-01-19');
+
+
+CREATE TABLE Customer (
+  CustomerName VARCHAR(255) NOT NULL,
+  SSN INT NOT NULL,
+  CustomerCity VARCHAR(255) NOT NULL,
+  CustomerStreet VARCHAR(255) NOT NULL,
+  CustomerBanker VARCHAR(255) NOT NULL,
+  BranchName VARCHAR(255) NOT NULL,
+  PRIMARY KEY (CustomerName),
+  FOREIGN KEY (BranchName) REFERENCES Branch(BranchName)
+);
+
+
+INSERT INTO Customer (CustomerName, SSN, CustomerCity, CustomerStreet, CustomerBanker, BranchName) VALUES
+  ('Andrew Dziedzic', 12345, 'Newark', '5th Street', 'Rafeal Anderson', 'Main Avenue'),
+  ('Derek Leckner', 23456, 'Paterson', '6th Street', 'Manuel Soler', 'Park Avenue'),
+  ('Sergio Jackson', 34567, 'Jersey City', '7th Street', 'Philipe Ernesto', 'Circle Avenue'),
+  ('Adam Johnson', 45678, 'Garfield', '8th Street', 'Rahul Syed', 'Bridge Avenue'),
+  ('Anna Pegan', 56789, 'Passaic', '9th Street', 'Musa Vihaj', 'Rose'),
+  ('Robert Village', 67890, 'Clifton', '1st Street', 'Laura Cather', 'Maywood'),
+  ('Mary Perry', 78901, 'Edison', '2nd Street', 'Natalie Hartman', 'Brook'),
+  ('Stephanie Veehoy', 89012, 'Trenton', '3rd Street', 'Alyssa Lopez', 'Edge'),
+  ('Jane Phillips', 90123, 'Bayonne', '4th Street', 'Maria Jasper', 'Creek'),
+  ('Marissa Sinsowky', 1234, 'Piscataway', '5th Street', 'Jessica Horca', 'Hart');
+
+
+CREATE TABLE loan (
+  loan_number INT PRIMARY KEY,
+  branch_name VARCHAR(50) NOT NULL,
+  account_type VARCHAR(50) NOT NULL,
+  ssn INT NOT NULL,
+  FOREIGN KEY (branch_name) REFERENCES branch(branch_name),
+  FOREIGN KEY (ssn) REFERENCES customer(ssn)
+);
+
+
+INSERT INTO loan (loan_number, branch_name, account_type, ssn)
+VALUES
+  (1235689, 'Main Avenue', 'Loan Account', 12345),
+  (9090912, 'Park Avenue', 'Loan Account', 23456),
+  (2323451, 'Circle Avenue', 'Loan Account', 34567),
+  (6767542, 'Bridge Avenue', 'Loan Account', 45678),
+  (8724019, 'Rose', 'Loan Account', 56789),
+  (1238701, 'Maywood', 'Loan Account', 67890),
+  (5748301, 'Brook', 'Loan Account', 78901),
+  (1928543, 'Edge', 'Loan Account', 89012),
+  (3477771, 'Creek', 'Loan Account', 90123),
+  (9999991, 'Hart', 'Loan Account', 1234);
+
+
+CREATE TABLE borrower (
+    customer_name VARCHAR(50) NOT NULL,
+    loan_number INT NOT NULL,
+    PRIMARY KEY (customer_name, loan_number),
+    FOREIGN KEY (customer_name) REFERENCES customer(customer_name),
+    FOREIGN KEY (loan_number) REFERENCES loan(loan_number)
+);
+
+
+INSERT INTO borrower (customer_name, loan_number)
+VALUES
+    ('Andrew Dziedzic', 1235689),
+    ('Derek Leckner', 9090912),
+    ('Sergio Jackson', 2323451),
+    ('Adam Johnson', 6767542),
+    ('Anna Pegan', 8724019),
+    ('Robert Village', 1238701),
+    ('Mary Perry', 5748301),
+    ('Stephanie Veehoy', 1928543),
+    ('Jane Phillips', 3477771),
+    ('Marissa Sinsowky', 9999991);
+
+
+
+CREATE TABLE Payment (
+    CustomerName VARCHAR(50),
+    LoanNumber INT,
+    PaymentDate DATE,
+    PaymentAmount DECIMAL(10,2),
+    PaymentNumber INT,
+    PRIMARY KEY (PaymentNumber),
+    FOREIGN KEY (LoanNumber) REFERENCES Loan(LoanNumber),
+    FOREIGN KEY (CustomerName) REFERENCES Borrower(CustomerName)
+);
+
+
+
+INSERT INTO Payment (Customer_Name, Loan_Number, Payment_Date, Payment_Amount, Payment_Number)
+VALUES
+('Andrew Dziedzic', '1235689', '3/5/2023', 2000, 99228844),
+('Derek Leckner', '9090912', '3/7/2023', 2500, 12000004),
+('Sergio Jackson', '2323451', '3/15/2023', 3000, 13999995),
+('Adam Johnson', '6767542', '3/17/2023', 1500, 14999992),
+('Anna Pegan', '8724019', '3/19/2023', 2700, 17999942),
+('Robert Village', '1238701', '3/21/2023', 2600, 19333346),
+('Mary Perry', '5748301', '3/2/2023', 1700, 85222901),
+('Stephanie Veehoy', '1928543', '3/4/2023', 1800, 62998501),
+('Jane Phillips', '3477771', '3/9/2023', 1900, 54009823),
+('Marissa Sinsowky', '9999991', '3/11/2023', 2100, 44098721);
+
