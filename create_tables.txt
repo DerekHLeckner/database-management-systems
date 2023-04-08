@@ -51,7 +51,7 @@ CREATE TABLE Depositor (
   AccountNumber INT NOT NULL,
   AccessDate DATE NOT NULL,
   PRIMARY KEY (CustomerName, AccountNumber),
-  FOREIGN KEY (AccountNumber) REFERENCES Account(AccountNumber)
+  FOREIGN KEY (AccountNumber) REFERENCES Account_Number(AccountNumber)
 );
 
 
@@ -67,15 +67,13 @@ INSERT INTO Depositor (CustomerName, AccountNumber, AccessDate) VALUES
   ('Jane Phillips', 9, '2023-02-25'),
   ('Marissa Sinsowky', 10, '2023-01-19');
 
-
 CREATE TABLE Customer (
-  CustomerName VARCHAR(255) NOT NULL,
-  SSN INT NOT NULL,
+  SSN INT PRIMARY KEY,
   CustomerCity VARCHAR(255) NOT NULL,
   CustomerStreet VARCHAR(255) NOT NULL,
   CustomerBanker VARCHAR(255) NOT NULL,
   BranchName VARCHAR(255) NOT NULL,
-  PRIMARY KEY (CustomerName),
+  CustomerName VARCHAR(255) NOT NULL,
   FOREIGN KEY (BranchName) REFERENCES Branch(BranchName)
 );
 
@@ -98,7 +96,7 @@ CREATE TABLE loan (
   branch_name VARCHAR(50) NOT NULL,
   account_type VARCHAR(50) NOT NULL,
   ssn INT NOT NULL,
-  FOREIGN KEY (branch_name) REFERENCES branch(branch_name),
+  FOREIGN KEY (branch_name) REFERENCES branch(branchname),
   FOREIGN KEY (ssn) REFERENCES customer(ssn)
 );
 
@@ -117,14 +115,13 @@ VALUES
   (9999991, 'Hart', 'Loan Account', 1234);
 
 
-CREATE TABLE borrower (
-    customer_name VARCHAR(50) NOT NULL,
-    loan_number INT NOT NULL,
-    PRIMARY KEY (customer_name, loan_number),
-    FOREIGN KEY (customer_name) REFERENCES customer(customer_name),
-    FOREIGN KEY (loan_number) REFERENCES loan(loan_number)
+CREATE TABLE Borrower (
+    Customer_Name VARCHAR(50) NOT NULL,
+    Loan_Number INT NOT NULL,
+    PRIMARY KEY (Loan_Number),
+    UNIQUE (Customer_Name),
+    FOREIGN KEY (Loan_Number) REFERENCES Loan(Loan_Number)
 );
-
 
 INSERT INTO borrower (customer_name, loan_number)
 VALUES
@@ -140,7 +137,6 @@ VALUES
     ('Marissa Sinsowky', 9999991);
 
 
-
 CREATE TABLE Payment (
     CustomerName VARCHAR(50),
     LoanNumber INT,
@@ -148,13 +144,13 @@ CREATE TABLE Payment (
     PaymentAmount DECIMAL(10,2),
     PaymentNumber INT,
     PRIMARY KEY (PaymentNumber),
-    FOREIGN KEY (LoanNumber) REFERENCES Loan(LoanNumber),
-    FOREIGN KEY (CustomerName) REFERENCES Borrower(CustomerName)
+    FOREIGN KEY (LoanNumber) REFERENCES Loan(Loan_Number),
+    FOREIGN KEY (CustomerName) REFERENCES Borrower(Customer_Name)
 );
 
 
 
-INSERT INTO Payment (Customer_Name, Loan_Number, Payment_Date, Payment_Amount, Payment_Number)
+INSERT INTO Payment (CustomerName, LoanNumber, PaymentDate, PaymentAmount, PaymentNumber)
 VALUES
 ('Andrew Dziedzic', '1235689', '3/5/2023', 2000, 99228844),
 ('Derek Leckner', '9090912', '3/7/2023', 2500, 12000004),
@@ -167,3 +163,22 @@ VALUES
 ('Jane Phillips', '3477771', '3/9/2023', 1900, 54009823),
 ('Marissa Sinsowky', '9999991', '3/11/2023', 2100, 44098721);
 
+
+
+select moneymarketaccount, avg(loanaccount) from account_number
+group by moneymarketaccount;
+
+
+select moneymarketaccount, avg(loanaccount) from account_number
+group by moneymarketaccount
+having avg(loanaccount) > 25000;
+
+
+SELECT *
+FROM account_number
+WHERE moneymarketaccount > ALL (SELECT assets FROM branch WHERE assets <= 50);
+
+
+SELECT *
+FROM account_number
+WHERE branchname IN (SELECT branchname FROM branch WHERE branchname = 'Creek');
