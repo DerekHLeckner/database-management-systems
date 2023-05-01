@@ -13,11 +13,20 @@ async def index(request: Request):
             <title>SQLite Query Tool</title>
         </head>
         <body>
+        <img src="https://futuretechnologies.njit.edu/sites/futuretechnologies/files/njit%20logo_0.png" alt="Example Image">
+        <h1>CS 631 | Spring 2023 | Derek and Andrew UI</h1>  
+        	<style>
+		h1 {
+			font-style: italic;
+			color: green;
+		}
+	</style>  
             <form action="/query" method="post">
                 <textarea name="query" rows="10" cols="50"></textarea>
                 <br>
                 <button type="submit">Execute Query</button>
             </form>
+        <img src="https://media.bizj.us/view/img/5803721/bank*1200xx684-385-0-64.jpg" alt="Bank Picture">
         </body>
     </html>
     """
